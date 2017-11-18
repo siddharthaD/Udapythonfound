@@ -1,7 +1,7 @@
 import webbrowser
 import os
 import re
-
+from media import Movie
 
 # Styles and scripting for the page
 main_page_head = '''
@@ -129,22 +129,25 @@ movie_tile_content = '''
 '''
 
 
-def create_movie_tiles_content(movies):
+def create_movie_tiles_content(videos):
     # The HTML content for this section of the page
     content = ''
-    for movie in movies:
-        # Extract the youtube ID from the url
-        youtube_id_match = re.search(
-            r'(?<=v=)[^&#]+', movie.trailer_youtube_url)
-        youtube_id_match = youtube_id_match or re.search(
-            r'(?<=be/)[^&#]+', movie.trailer_youtube_url)
-        trailer_youtube_id = (youtube_id_match.group(0) if youtube_id_match
-                              else None)
+    for video in videos:
+
+        if isinstance(video, Movie):
+           
+            # Extract the youtube ID from the url
+            youtube_id_match = re.search(
+                r'(?<=v=)[^&#]+', video.trailer_url)
+            youtube_id_match = youtube_id_match or re.search(
+                r'(?<=be/)[^&#]+', video.trailer_url)
+            trailer_youtube_id = (youtube_id_match.group(0) if youtube_id_match
+                                  else None)
 
         # Append the tile for the movie with its content filled in
         content += movie_tile_content.format(
-            movie_title=movie.title,
-            poster_image_url=movie.poster_image_url,
+            movie_title=video.title,
+            poster_image_url=video.poster_url,
             trailer_youtube_id=trailer_youtube_id
         )
     return content
